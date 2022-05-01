@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content="House Sensor Monitor">
+    <meta http-equiv="refresh" content="60" >
+    <link rel="stylesheet" data-th-href="@{/webjars/bulma/css/bulma.min.css}"/>
+    <link rel="stylesheet" data-th-href="@{/webjars/font-awesome/css/all.css}"/>
+    <title>House Sensor Monitor</title>
+</head>
+<body class="has-background-light">
+<section class="hero is-info is-bold" role="banner">
+    <div class="hero-body py-3">
+        <div class="container">
+            <h1 class="title is-inline">House Monitor</h1>
+            <h2 class="subtitle is-inline" data-th-text="' (' + ${releaseVersion} + ')'"></h2>
+            <h2 class="subtitle">
+                <i class="fas fa-copyright" aria-hidden="true"></i> David McPaul 2021
+            </h2>
+        </div>
+    </div>
+</section>
+<section th:unless="${sensorCards.isEmpty()}">
+    <div class="container">
+        <br>
+        <div class="notification is-rounded is-primary is-light">
+            <h3 class="subtitle has-text-centered" data-th-text="'Coldest room was ' + ${summary.getColdestRoom()} + ' - ' + ${summary.getLowestTemp()} + ' at ' + ${summary.getLowestTempTime()}"></h3>
+            <h3 class="subtitle has-text-centered" data-th-text="'Hottest Room was ' + ${summary.getHottestRoom()} + ' - ' + ${summary.getHighestTemp()} +' at ' + ${summary.getHighestTempTime()}"></h3>
+        </div>
+    </div>
+</section>
+<section class="section has-background-light py-2">
+    <div class="container">
+        <div th:if="${sensorCards.isEmpty()}">
+            <div class="notification is-warning has-text-centered">
+                No Sensors Found
+            </div>
+        </div>
+        <div th:unless="${sensorCards.isEmpty()}">
+        <nav class="level">
+            <div class="level-item">
+                <div class="buttons has-addons is-centered">
+                    <th:block th:each="filter : ${availableFilters}">
+                        <div data-th-replace="~{fragments/Filters :: filterButton(${filter},${selectedFilter})}"></div>
+                    </th:block>
+                </div>
+            </div>
+        </nav>
+
+        <div class="columns is-multiline">
+            <div class="column is-one-quarter" th:each="sensorCard : ${sensorCards}">
+                <a th:href="@{/sensor/{id}(id=${sensorCard.id})}">
+                    <div th:replace="~{fragments/Cards :: sensorCard (${sensorCard}, ${selectedFilter})}"></div>
+                </a>
+            </div>
+        </div>
+        </div>
+    </div>
+</section>
+<footer class="footer is-paddingless has-background-light" role="contentinfo">
+    <div class="container">
+        <div class="tabs is-centered">
+            <ul>
+                <li class="has-text-weight-semibold">About</li>
+            </ul>
+        </div>
+        <div class="columns is-centered">
+            <div class="column is-one-third">
+                <ul>
+                    <li class="pl-2 is-size-6">Rendered by <strong>Thymeleaf</strong> at <span data-th-text="${#calendars.format(#execInfo.now, 'dd MMM yyyy HH:mm')}"></span></li>
+                    <li><br></li>
+                    <li class="is-size-6"><a href="https://bulma.io" title="Link to Bulma"><img data-th-src="@{/made-with-bulma.png}" alt="Made with Bulma" title="Made with Bulma" src="/made-with-bulma.png" width="128" height="24"></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

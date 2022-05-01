@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<body>
+<!--/*@thymesVar id="label" type="java.lang.String"*/-->
+<!--/*@thymesVar id="selected" type="java.lang.String"*/-->
+<!--/*@thymesVar id="url" type="java.lang.String"*/-->
+<!--/*@thymesVar id="target" type="java.lang.String"*/-->
+<a th:fragment="filterButton (label, selected, url, target)" class="button" th:attrappend="class=${#strings.equals(label, selected)} ? ' is-selected is-info' : ' is-white'" th:text="${label}" th:attr="hx-get=${url},hx-target=${target},hx-swap='outerHTML'">
+</a>
+<!--/*@thymesVar id="filters" type="java.util.List<>"*/-->
+<!--/*@thymesVar id="selected" type="java.lang.String"*/-->
+<!--/*@thymesVar id="url" type="java.lang.String"*/-->
+<!--/*@thymesVar id="target" type="java.lang.String"*/-->
+<nav th:fragment="filterBlock (filters, selected, url, target)" class="level">
+    <div class="level-item">
+        <div class="buttons has-addons is-centered block">
+            <th:block th:each="filter : ${filters}">
+                <div th:replace="~{fragments/Filters :: filterButton (${filter}, ${selected}, ${url} + '?filter=' + ${filter}, ${target})}"></div>
+            </th:block>
+        </div>
+    </div>
+</nav>
+</body>
+</html>

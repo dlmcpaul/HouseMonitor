@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width"/>
+    <meta name="description" content="House Sensor Monitor">
+    <link rel="stylesheet" data-th-href="@{/webjars/bulma/css/bulma.min.css}"/>
+    <link rel="stylesheet" data-th-href="@{/webjars/font-awesome/css/all.css}"/>
+    <link rel="stylesheet" data-th-href="@{/css/weather-icons.css}"/>
+    <title>House Sensor Monitor</title>
+</head>
+<body>
+<div class="hero is-fullheight">
+    <div class="hero-head has-background-info is-bold py-5 px-5" role="banner">
+        <p class="title has-text-white" th:text="'House Monitor (' + ${releaseVersion} + ')'">House Monitor</p>
+        <p class="subtitle has-text-white"><i class="fas fa-copyright" aria-hidden="true"></i> David McPaul 2021</p>
+    </div>
+    <div class="hero-body has-background-light" role="main">
+        <div class="container">
+            <div class="columns is-2">
+                <div class="column is-one-quarter">
+                    <div th:replace="~{fragments/Weather :: current (${currentWeather})}"></div>
+                    <div th:replace="~{fragments/Weather :: forecast (${forecast})}"></div>
+                </div>
+                <div class="column">
+                    <div th:replace="~{fragments/Cards :: sensorCards (${availableFilters}, ${sensorCards}, ${selectedFilter})}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hero-foot has-background-info has-text-white py-1 px-3">
+        <nav class="level">
+            <div class="level-left"></div>
+            <div class="level-right">
+                <div class="level-item"><p>Rendered by <strong class="has-text-white">Thymeleaf</strong> at <span data-th-text="${#calendars.format(#execInfo.now, 'dd MMM yyyy h:mm a')}"></span></p></div>
+                <div class="level-item"><a href="https://bulma.io" title="Link to Bulma"><img data-th-src="@{/made-with-bulma--white.png}" alt="Made with Bulma" title="Made with Bulma" src="/made-with-bulma.png" width="128" height="24"></a></div>
+            </div>
+        </nav>
+    </div>
+</div>
+<script type="text/javascript" data-th-src="@{/webjars/htmx.org/dist/htmx.js}"></script>
+</body>
+</html>

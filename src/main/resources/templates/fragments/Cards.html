@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<body>
+<!--/*@thymesVar id="sensorCard" type="com.hz.housemonitor.models.render.SensorCard"*/-->
+<!--/*@thymesVar id="selected" type="java.lang.String"*/-->
+<div th:fragment="sensorCard (sensorCard, selected)" class="card">
+    <div class="card-content p-2">
+        <div class="media">
+            <div class="media-left">
+                <figure class="is-24x24">
+                    <p class="icon"><i th:class="${sensorCard.icon}" aria-hidden="true"></i></p>
+                </figure>
+            </div>
+            <div class="media-content title is-5" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis" data-th-text="${sensorCard.title}">Sensor Title</div>
+        </div>
+
+        <div class="content">
+            <nav class="level is-mobile mb-1" th:each="attribute : ${sensorCard.attributes}">
+                <div class="level-left">
+                    <div class="level-item icon"><i th:class="${attribute.icon}" aria-hidden="true"></i></div>
+                    <div th:if="${#strings.equals(selected, attribute.text)}" class="level-item has-text-weight-bold" data-th-text="${attribute.text}">Text</div>
+                    <div th:unless="${#strings.equals(selected, attribute.text)}" class="level-item" data-th-text="${attribute.text}">Text</div>
+                </div>
+                <div class="level-right">
+                    <div th:class="level-item" th:text="${attribute.value}">Value</div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>
+<!--/*@thymesVar id="sensorCard" type="com.hz.housemonitor.models.render.SensorCard"*/-->
+<!--/*@thymesVar id="selected" type="java.lang.String"*/-->
+<a th:fragment="sensorCardSmall (sensorCard, selected)" th:href="@{/sensor/{id}(id=${sensorCard.id},filter=${selected})}">
+    <div class="box has-text-centered px-2" th:style="'background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2)), url(kam-idris-kyt0PkBSCNQ-unsplash.jpg);background-size: cover;background-repeat: no-repeat;'">
+        <span th:if="${sensorCard.isOffline()}" class="tag is-pulled-right is-danger">offline</span>
+        <span th:if="${sensorCard.isBatteryLow()}" class="tag is-pulled-right is-warning">battery</span>
+        <div class="icon is-medium">
+            <i th:class="${sensorCard.icon} + ' fa-2x'" aria-hidden="true"></i>
+        </div>
+        <div>
+            <h3 class="has-text-white has-text-weight-bold" data-th-text="${sensorCard.title}"></h3>
+            <div th:each="attribute : ${sensorCard.attributes}">
+                <div th:if="${#strings.equals(selected, attribute.text)}" class="has-text-white has-text-weight-bold" data-th-text="${attribute.value}">Attribute</div>
+            </div>
+        </div>
+    </div>
+</a>
+<!--/*@thymesVar id="filters" type="java.util.List<>"*/-->
+<!--/*@thymesVar id="cards" type="java.util.List<com.hz.housemonitor.models.render.SensorCard>"*/-->
+<!--/*@thymesVar id="selected" type="java.lang.String"*/-->
+<div id="sensorlist" th:fragment="sensorCards (filters, cards, selected)" th:attr="hx-get=@{/sensors(filter=${selected})}" hx-trigger="every 60s" hx-swap="outerHTML">
+    <nav th:replace="~{fragments/Filters :: filterBlock (${filters}, ${selected}, @{/sensors}, '#sensorlist')}"></nav>
+    <div th:replace="~{fragments/Cards :: sensors (${cards}, ${selected})}"></div>
+</div>
+<!--/*@thymesVar id="sensorList" type="java.util.List<com.hz.housemonitor.models.render.SensorCard>"*/-->
+<!--/*@thymesVar id="selected" type="java.lang.String"*/-->
+<div th:fragment="sensors (sensorList, selected)">
+    <th:block th:if="${sensorList} == null or ${sensorList.isEmpty()}">
+        <div class="notification is-warning has-text-centered">
+            No Sensors Found
+        </div>
+    </th:block>
+    <th:block th:unless="${sensorList} == null or ${sensorList.isEmpty()}">
+        <div class="columns is-multiline">
+            <div th:each="sensorCard : ${sensorList}" class="column is-one-quarter">
+                <div th:replace="~{fragments/Cards :: sensorCardSmall (${sensorCard}, ${selected})}"></div>
+            </div>
+        </div>
+    </th:block>
+</div>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content="House Sensor Monitor">
+    <link rel="stylesheet" th:href="@{/webjars/bulma/css/bulma.min.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css}"/>
+    <script src="https://unpkg.com/d3"></script>
+    <script src="https://unpkg.com/d3fc"></script>
+    <title>House Sensor Monitor</title>
+</head>
+<body class="has-background-light">
+<section class="hero is-fullheight">
+    <div class="hero-head has-background-info is-bold py-5 px-5" role="banner">
+        <p class="title has-text-white" th:text="'House Monitor (' + ${releaseVersion} + ')'">House Monitor</p>
+        <p class="subtitle has-text-white"><i class="fas fa-copyright" aria-hidden="true"></i> David McPaul 2021</p>
+    </div>
+    <div class="hero-body has-background-light" role="main">
+        <div class="container">
+            <nav th:replace="~{fragments/Filters :: filterBlock (${availableFilters}, ${selectedFilter}, '#sensorlist')}"></nav>
+<!--            <a class="title" th:text="Home" th:href="@{/}"></a> -->
+            <div class="columns is-2">
+                <div class="column is-one-quarter">
+                    <div th:replace="~{fragments/Cards :: sensorCard (${sensor}, ${selectedFilter})}"></div>
+                </div>
+                <div class="column">
+                    <div id="sensor-chart" style="height: 250px"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hero-foot has-background-info has-text-white py-1 px-3">
+        <nav class="level">
+            <div class="level-left"></div>
+            <div class="level-right">
+                <div class="level-item"><p>Rendered by <strong class="has-text-white">Thymeleaf</strong> at <span data-th-text="${#calendars.format(#execInfo.now, 'dd MMM yyyy h:mm a')}"></span></p></div>
+                <div class="level-item"><a href="https://bulma.io" title="Link to Bulma"><img data-th-src="@{/made-with-bulma--white.png}" alt="Made with Bulma" title="Made with Bulma" src="/made-with-bulma.png" width="128" height="24"></a></div>
+            </div>
+        </nav>
+    </div>
+</section>
+<script data-th-inline="javascript">
+    const title = [[${sensor.title}]];
+    const sensorData = [[${sensorData}]];
+    const referenceData = [[${referenceData}]];
+
+    const data = sensorData.map( function(x, i) { console.log(referenceData[i].value); return {"when": x.when, "value1": x.value, "value2": referenceData[i].value} }, this);
+
+    const xExtent = fc.extentTime()
+        .accessors([d => Date.parse(d.when)])
+    ;
+    const yExtent = fc.extentLinear()
+        .accessors([d => d.value1])
+//        .accessors([d => d.value1, d => d.value2])
+//        .include([0])
+//        .pad([0,1])
+//        .padUnit('domain')
+    ;
+    const timeScale = d3.scaleTime()
+        .domain(xExtent(data));
+    const yScale = d3.scaleLinear()
+        .domain(yExtent(data))
+        .range([0,250])
+//        .nice()
+    ;
+
+    const sensorSeries = fc.seriesSvgLine()
+        .crossValue(d => Date.parse(d.when))
+        .mainValue(d => d.value1)
+    ;
+    const referenceSeries = fc.seriesSvgLine()
+        .crossValue(d => Date.parse(d.when))
+        .mainValue(d => d.value2)
+    ;
+
+    const multiSeries = fc.seriesSvgMulti()
+        .xScale(timeScale)
+        .yScale(yScale)
+        .series([sensorSeries, referenceSeries]);
+
+    const chart = fc
+        .chartCartesian(timeScale, yScale)
+        .svgPlotArea(multiSeries)
+    ;
+
+    d3.select('#sensor-chart')
+    .datum(data)
+    .call(chart);
+</script>
+</body>
+</html>

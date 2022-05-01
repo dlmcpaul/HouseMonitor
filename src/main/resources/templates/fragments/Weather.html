@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<body>
+<!--/*@thymesVar id="sensor" type="com.hz.housemonitor.models.render.SensorCard"*/-->
+<div th:fragment="current (sensor)" th:attr="hx-get=@{/weather/current}" hx-trigger="every 60s" hx-swap="outerHTML" class="box has-text-centered">
+    <div th:unless="${sensor} == null" class="block">
+        <span class="icon-text is-size-4">
+            <span class="icon">
+                <i th:class="${sensor.icon}" aria-hidden="true"></i>
+            </span>
+            <span>&nbsp;</span>
+            <span th:text="${sensor.title}">Suburb</span>
+        </span>
+    </div>
+    <div th:unless="${sensor} == null" class="block tile is-ancestor">
+        <div class="tile is-parent is-vertical">
+            <div class="tile is-child title is-justify-content-center is-size-1" th:text="${#calendars.format(#calendars.createNow(), 'h:mm a')}">Current Time</div>
+            <div class="tile is-child subtitle is-justify-content-center" th:text="${#calendars.format(#calendars.createNow(), 'E, MMMMMMMMMMM dd')}">Current Date</div>
+            <div class="tile is-child is-justify-content-center">
+                <nav class="level">
+                    <div class="level-item has-text-centered">
+                        <div>
+                            <p class="heading">Low</p>
+                            <p class="subtitle" th:text="${sensor.getAttributeValue('low')}">0</p>
+                        </div>
+                    </div>
+                    <div class="level-item has-text-centered">
+                        <div>
+                            <p class="title" th:text="${sensor.getAttributeValue('temperature')}">50</p>
+                        </div>
+                    </div>
+                    <div class="level-item has-text-centered">
+                        <div>
+                            <p class="heading">High</p>
+                            <p class="subtitle" th:text="${sensor.getAttributeValue('high')}">100</p>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:fragment="forecast (days)" th:attr="hx-get=@{/weather/forecast}" hx-trigger="every 600s" hx-swap="outerHTML" class="box has-text-centered">
+    <div th:unless="${days} == null" class="tile is-ancestor">
+        <div class="tile is-parent">
+            <article class="tile is-child">
+                <div th:each="day : ${days}">
+                    <p class="has-text-left" th:text="${day.name}">Mon</p>
+                </div>
+            </article>
+        </div>
+        <div class="tile is-parent">
+            <article class="tile is-child">
+                <div th:each="day : ${days}">
+                    <span class="icon">
+                        <i th:class="${day.icon}" aria-hidden="true"></i>
+                    </span>
+                </div>
+            </article>
+        </div>
+        <div class="tile is-parent">
+            <article class="tile is-child">
+                <div th:each="day : ${days}">
+                    <p th:text="${day.min}"></p>
+                </div>
+            </article>
+        </div>
+        <div class="tile is-parent">
+            <article class="tile is-child">
+                <div th:each="day : ${days}">
+                    <p th:text="${day.max}"></p>
+                </div>
+            </article>
+        </div>
+    </div>
+</div>
+</body>
+</html>

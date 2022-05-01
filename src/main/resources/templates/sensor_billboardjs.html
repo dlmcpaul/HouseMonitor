@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content="House Sensor Monitor">
+    <meta http-equiv="refresh" content="60" >
+    <link rel="stylesheet" data-th-href="@{/webjars/bulma/css/bulma.min.css}"/>
+    <link rel="stylesheet" data-th-href="@{/webjars/font-awesome/css/all.css}"/>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/billboard.js/3.1.0/billboard.min.js" integrity="sha512-znWjD8JsDwBMEc1bLv6P+DcUyAVww9hBQe7AWksn7XsICAoTjPlfYSWu4xQVFrUL7+LQGyTTp095AqSfBZww8Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/billboard.js/3.1.0/theme/graph.min.css" integrity="sha512-oyxW1gZ3UAdeyqMc4LZAlqDqcjbNucFuz693yy4zH5w7dfi+8KBkK4dz0/4OgVqgXOjuVnlOtvWnEtKEIznzOA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>House Sensor Monitor</title>
+</head>
+<body class="has-background-light">
+<section class="hero is-info is-bold" role="banner">
+    <div class="hero-body py-3">
+        <div class="container">
+            <h1 class="title is-inline">House Monitor</h1>
+            <h2 class="subtitle is-inline" data-th-text="' (' + ${releaseVersion} + ')'"></h2>
+            <h2 class="subtitle">
+                <i class="fas fa-copyright" aria-hidden="true"></i> David McPaul 2021
+            </h2>
+        </div>
+    </div>
+</section>
+<section class="section has-background-light">
+    <div class="container">
+        <h1 class="title" th:text="${sensor.title}"></h1>
+        <div id="temperatureChart"></div>
+    </div>
+</section>
+<footer class="footer is-paddingless has-background-light" role="contentinfo">
+    <div class="container">
+        <div class="tabs is-centered">
+            <ul>
+                <li class="has-text-weight-semibold">About</li>
+            </ul>
+        </div>
+        <div class="columns is-centered">
+            <div class="column is-one-third">
+                <ul>
+                    <li class="pl-2 is-size-6">Rendered by <strong>Thymeleaf</strong> at <span data-th-text="${#calendars.format(#execInfo.now, 'dd MMM yyyy HH:mm')}"></span></li>
+                    <li><br></li>
+                    <li class="is-size-6"><a href="https://bulma.io" title="Link to Bulma"><img data-th-src="@{/made-with-bulma.png}" alt="Made with Bulma" title="Made with Bulma" src="made-with-bulma.png" width="128" height="24"></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+<script data-th-inline="javascript">
+    const data = [[${todaysTemperature}]];
+
+    const timeData = data.map(item => {
+            return item.when
+    });
+
+    const tempData = data.map(item => {
+            return item.value
+    });
+
+    // generate the chart
+    bb.generate({
+        bindto: "#temperatureChart",
+        data: {
+            x: "time",
+            xFormat: "%Y-%m-%dT%H:%M:%S.%LZ",
+            xSort: false,
+            json: {
+                time: timeData,
+                temperature: tempData
+            },
+            type: "spline",
+        },
+        axis: {
+            x: {
+                type: "timeseries",
+                tick: {
+                    format: "%H:%M",
+                    count: 24,
+                    fit: false
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<body>
+<div id="historyGraph" class="column" th:fragment="historyGraph (filters, selected, id)">
+    <nav th:replace="~{fragments/Filters :: filterBlock (${filters}, ${selected}, @{/sensor/{id}/graph(id=${id})}, '#historyGraph')}"></nav>
+    <div th:replace="~{fragments/Graphs :: graph}"></div>
+    <script data-th-inline="javascript">
+        htmx.onLoad(function(content){
+        const title = [[${sensor.title}]];
+        let sensorData = [[${sensorData}]].map( function (x) { return [ Date.parse(x.when), +(x.value)] ;});
+        let referenceData = [[${referenceData}]].map( function (x) { return [ Date.parse(x.when), +(x.value)] ;});
+
+        //Disable use of UTC
+        Highcharts.setOptions({
+            time: {
+                timezone: [[${TZ}]]
+            },
+            global: {
+                useUTC: false
+            }
+        });
+        const now = new Date();
+
+        const historyProperties = {
+            chart: {
+                renderTo: "history-chart"
+            },
+            credits: {
+                enabled: false
+            },
+            title: {
+                text: "Sensor History"
+            },
+            xAxis: {
+                title: {
+                    text: "Last 24h"
+                },
+                type: "datetime", //For time series, x-axis labels will be time
+                labels: {
+                    format: "{value:%H}"
+                },
+                minPadding: 0.05,
+                maxPadding: 0.05
+            },
+            yAxis: [
+                {
+                    title: {
+                        text: "Value"
+                    },
+                    labels: {
+                        format: "{value}",
+                        style: {
+                            color: Highcharts.getOptions().colors[1]
+                        }
+                    }
+                }],
+            legend: {
+                layout: "vertical",
+                align: "left",
+                x: 120,
+                verticalAlign: "top",
+                y: 50,
+                floating: true,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || "rgba(255,255,255,0.25)"
+            },
+            series: [
+                {
+                    name: "sensor",
+                    type: "line",
+                    color: "#55BF3B",
+                    data: [ [now.getTime(), 0] ]
+                },
+                {
+                    name: "reference",
+                    type: "line",
+                    color: "#DDDF0D",
+                    data: [ [now.getTime(), 0] ]
+                }
+            ]
+        };
+
+        let chart = Highcharts.chart(historyProperties);
+        chart.series[0].setData(sensorData);
+        chart.series[1].setData(referenceData);
+        });
+    </script>
+</div>
+<div th:fragment="graph">
+    <div id="history-chart" style="height: 250px"></div>
+</div>
+</body>
+</html>
