@@ -19,7 +19,7 @@
         <highcharts.version>9.3.2</highcharts.version>
         <bulma.version>0.9.3</bulma.version>
         <font-awsome.version>5.15.4</font-awsome.version>
-        <htmx.version>1.6.1</htmx.version>
+        <htmx.version>1.7.0</htmx.version>
         <repackage.classifier/>
         <build.number>development</build.number>
         <build.source>SNAPSHOT</build.source>
