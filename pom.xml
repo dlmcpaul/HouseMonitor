@@ -17,7 +17,7 @@
         <java.version>17</java.version>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
         <highcharts.version>9.3.2</highcharts.version>
-        <bulma.version>0.9.3</bulma.version>
+        <bulma.version>0.9.4</bulma.version>
         <font-awsome.version>5.15.4</font-awsome.version>
         <htmx.version>1.7.0</htmx.version>
         <build.number>development</build.number>
