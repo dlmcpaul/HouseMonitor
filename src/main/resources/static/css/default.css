@@ -1,0 +1,5 @@
+h3.ellipses {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

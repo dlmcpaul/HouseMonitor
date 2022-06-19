@@ -150,18 +150,17 @@ public class ViewService {
     }
 
     @Cacheable("attributes")
-    public List<String> getDistinctAttributes() {
+    public List<Filter> getDistinctAttributes() {
         log.info("getDistinctAttributes started at {}", this::now);
         try {
             List<SensorEvent> events = localDBService.getEventsForToday();
             Optional<SensorEvent> anyEvent = events.stream().findFirst();
 
-            ArrayList<String> result = new ArrayList<>();
+            ArrayList<Filter> result = new ArrayList<>();
 
             anyEvent.ifPresent(sensorEvent -> result.addAll(sensorEvent.getMeasurementList()
                     .stream()
-                    .map(Measurement::getType)
-                    .map(text -> text.substring(0, 1).toUpperCase() + text.substring(1))
+                    .map(measurement -> new Filter(measurement.getType().substring(0, 1).toUpperCase() + measurement.getType().substring(1)))
                     .sorted()
                     .collect(Collectors.toList())));
             return result;

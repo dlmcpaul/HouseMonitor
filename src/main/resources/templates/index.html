@@ -8,6 +8,7 @@
     <link rel="stylesheet" data-th-href="@{/webjars/bulma/css/bulma.min.css}"/>
     <link rel="stylesheet" data-th-href="@{/webjars/font-awesome/css/all.css}"/>
     <link rel="stylesheet" data-th-href="@{/css/weather-icons.css}"/>
+    <link rel="stylesheet" data-th-href="@{/css/default.css}"/>
     <title>House Sensor Monitor</title>
     <script type="text/javascript" data-th-src="@{/webjars/htmx.org/dist/htmx.js}"></script>
 </head>
@@ -20,7 +21,7 @@
     <div class="hero-body has-background-light" role="main">
         <div class="container">
             <div class="columns is-2">
-                <div class="column is-one-quarter">
+                <div class="column is-one-third-mobile is-one-third-tablet is-one-quarter-desktop">
                     <div th:replace="~{fragments/Weather :: current (${currentWeather})}"></div>
                     <div th:replace="~{fragments/Weather :: forecast (${forecast})}"></div>
                 </div>

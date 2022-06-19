@@ -38,7 +38,7 @@
             <i th:class="${sensorCard.icon} + ' fa-2x'" aria-hidden="true"></i>
         </div>
         <div>
-            <h3 class="has-text-white has-text-weight-bold" data-th-text="${sensorCard.title}"></h3>
+            <h3 class="has-text-white has-text-weight-bold ellipses" data-th-text="${sensorCard.title}"></h3>
             <div th:each="attribute : ${sensorCard.attributes}">
                 <div th:if="${#strings.equals(selected, attribute.text)}" class="has-text-white has-text-weight-bold" data-th-text="${attribute.value}">Attribute</div>
             </div>
@@ -61,8 +61,8 @@
         </div>
     </th:block>
     <th:block th:unless="${sensorList} == null or ${sensorList.isEmpty()}">
-        <div class="columns is-multiline">
-            <div th:each="sensorCard : ${sensorList}" class="column is-one-quarter">
+        <div class="columns is-mobile is-multiline">
+            <div th:each="sensorCard : ${sensorList}" class="column is-one-third-mobile is-one-third-tablet is-one-quarter-desktop">
                 <div th:replace="~{fragments/Cards :: sensorCardSmall (${sensorCard}, ${selected})}"></div>
             </div>
         </div>
