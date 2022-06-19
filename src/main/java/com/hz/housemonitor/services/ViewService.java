@@ -161,8 +161,7 @@ public class ViewService {
             anyEvent.ifPresent(sensorEvent -> result.addAll(sensorEvent.getMeasurementList()
                     .stream()
                     .map(measurement -> new Filter(measurement.getType().substring(0, 1).toUpperCase() + measurement.getType().substring(1)))
-                    .sorted()
-                    .collect(Collectors.toList())));
+                    .sorted().toList()));
             return result;
         } finally {
             log.info("getDistinctAttributes completed at {}", this::now);

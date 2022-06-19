@@ -40,7 +40,7 @@ public class HomePageController {
             model.addAttribute("currentWeather", viewService.getCurrentWeatherSensor());
 
         } catch (Exception e) {
-            log.error("index Page Exception {} {}", e.getMessage(), e);
+            log.error("Index Page Exception {} {}", e.getMessage(), e);
         }
         return "index";
     }

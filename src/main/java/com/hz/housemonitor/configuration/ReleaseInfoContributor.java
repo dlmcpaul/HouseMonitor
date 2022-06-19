@@ -35,6 +35,6 @@ public class ReleaseInfoContributor implements InfoContributor, InitializingBean
     }
 
     public String getVersion() {
-        return env != null && env.getProperty(RELEASE_VERSION_PROPERTY) != null ? env.getProperty(RELEASE_VERSION_PROPERTY).trim() : UNRELEASED;
+        return (env != null && env.getProperty(RELEASE_VERSION_PROPERTY) != null) ? env.getProperty(RELEASE_VERSION_PROPERTY).trim() : UNRELEASED;
     }
 }
