@@ -8,6 +8,7 @@
 <a th:fragment="filterButton (label, selected, url, target)" class="button" th:attrappend="class=${#strings.equals(label, selected)} ? ' is-selected is-info' : ' is-white'" th:text="${label}" th:attr="hx-get=${url},hx-target=${target},hx-swap='outerHTML'">
 </a>
 <!--/*@thymesVar id="label" type="java.lang.String"*/-->
+<!--/*@thymesVar id="icon" type="java.lang.String"*/-->
 <!--/*@thymesVar id="selected" type="java.lang.String"*/-->
 <!--/*@thymesVar id="url" type="java.lang.String"*/-->
 <!--/*@thymesVar id="target" type="java.lang.String"*/-->
@@ -16,7 +17,7 @@
         <i th:class="${icon}" aria-hidden="true"></i>
     </span>
 </a>
-<!--/*@thymesVar id="filters" type="java.util.List<>"*/-->
+<!--/*@thymesVar id="filters" type="java.util.List<com.hz.housemonitor.models.render.Filter>"*/-->
 <!--/*@thymesVar id="selected" type="java.lang.String"*/-->
 <!--/*@thymesVar id="url" type="java.lang.String"*/-->
 <!--/*@thymesVar id="target" type="java.lang.String"*/-->
