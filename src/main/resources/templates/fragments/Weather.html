@@ -17,7 +17,7 @@
             <div class="tile is-child title is-justify-content-center is-size-1" th:text="${#calendars.format(#calendars.createNow(), 'h:mm a')}">Current Time</div>
             <div class="tile is-child subtitle is-justify-content-center" th:text="${#calendars.format(#calendars.createNow(), 'E, MMMMMMMMMMM dd')}">Current Date</div>
             <div class="tile is-child is-justify-content-center">
-                <nav class="level">
+                <nav class="level is-mobile">
                     <div class="level-item has-text-centered">
                         <div>
                             <p class="heading">Low</p>
@@ -41,36 +41,22 @@
     </div>
 </div>
 <div th:fragment="forecast (days)" th:attr="hx-get=@{/weather/forecast}" hx-trigger="every 600s" hx-swap="outerHTML" class="box has-text-centered">
-    <div th:unless="${days} == null" class="tile is-ancestor">
-        <div class="tile is-parent">
-            <article class="tile is-child">
-                <div th:each="day : ${days}">
-                    <p class="has-text-left" th:text="${day.name}">Mon</p>
-                </div>
-            </article>
+    <div th:unless="${days} == null" class="columns is-mobile">
+        <div class="column">
+            <p class="has-text-left" th:each="day : ${days}" th:text="${day.name}">Mon</p>
         </div>
-        <div class="tile is-parent">
-            <article class="tile is-child">
-                <div th:each="day : ${days}">
-                    <span class="icon">
-                        <i th:class="${day.icon}" aria-hidden="true"></i>
-                    </span>
-                </div>
-            </article>
+        <div class="column">
+            <p th:each="day : ${days}">
+                <span class="icon">
+                    <i th:class="${day.icon}" aria-hidden="true"></i>
+                </span>
+            </p>
         </div>
-        <div class="tile is-parent">
-            <article class="tile is-child">
-                <div th:each="day : ${days}">
-                    <p th:text="${day.min}"></p>
-                </div>
-            </article>
+        <div class="column">
+            <p th:each="day : ${days}" th:text="${day.min}"></p>
         </div>
-        <div class="tile is-parent">
-            <article class="tile is-child">
-                <div th:each="day : ${days}">
-                    <p th:text="${day.max}"></p>
-                </div>
-            </article>
+        <div class="column">
+            <p th:each="day : ${days}" th:text="${day.max}"></p>
         </div>
     </div>
 </div>

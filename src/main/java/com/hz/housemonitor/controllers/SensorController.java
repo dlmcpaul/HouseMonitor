@@ -32,7 +32,7 @@ public class SensorController {
             model.addAttribute("selectedFilter", filter);
             model.addAttribute("sensorCards", sensorCards.stream().filter(card -> card.isWeatherSensor() == false).collect(Collectors.toList()));
         } catch (Exception e) {
-            log.error("sensors Page Exception {} {}", e.getMessage(), e);
+            log.error("Sensors Page Exception {} {}", e.getMessage(), e);
         }
         return "fragments/Cards :: sensorCards (filters = ${availableFilters}, cards = ${sensorCards}, selected = ${selectedFilter})";
     }
