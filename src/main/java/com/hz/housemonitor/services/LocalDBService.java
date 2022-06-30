@@ -48,8 +48,8 @@ public class LocalDBService {
         return measurementRepository.getMaxTemperatureFor(sensorId, from);
     }
 
-    public HighLowStatistic getMeasurementsStatsFor(Long sensorId, LocalDateTime from) {
-        return measurementRepository.getHighLowStat(sensorId, from, "temperature");
+    public HighLowStatistic getMeasurementsStatsFor(Long sensorId, LocalDateTime from, String type) {
+        return measurementRepository.getHighLowStat(sensorId, from, type);
     }
 
     public List<SensorEvent> getEventsFor(LocalDate date) {

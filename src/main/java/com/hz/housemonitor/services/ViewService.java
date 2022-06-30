@@ -163,7 +163,7 @@ public class ViewService {
                     .map(Measurement::getType)
                     .map(text -> text.substring(0, 1).toUpperCase() + text.substring(1))
                     .sorted()
-                    .collect(Collectors.toList())));
+                    .toList()));
             return result;
         } finally {
             log.info("getDistinctAttributes completed at {}", this::now);
