@@ -20,6 +20,7 @@
         <bulma.version>0.9.4</bulma.version>
         <font-awsome.version>5.15.4</font-awsome.version>
         <htmx.version>1.8.2</htmx.version>
+        <snakeyaml.version>1.32</snakeyaml.version>
         <build.number>development</build.number>
         <build.source>SNAPSHOT</build.source>
         <revision>${build.number}-${build.source}</revision>
