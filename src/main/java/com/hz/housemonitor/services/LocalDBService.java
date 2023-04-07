@@ -16,7 +16,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -37,7 +36,7 @@ public class LocalDBService {
     }
     public List<Sensor> getSensors() {
         return StreamSupport.stream(sensorRepository.findAll().spliterator(), false)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public TemperatureStat getMinTemperatureForSensorAfter(Long sensorId, LocalDateTime from) {
@@ -67,14 +66,14 @@ public class LocalDBService {
     public List<SensorEvent> getEventsForToday(long id) {
         return getEventsForToday().stream()
                 .filter(sensorEvent -> sensorEvent.getSensor().getId() == id)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<SensorEvent> getEventsForPeriod(long id, LocalDateTime from, LocalDateTime before) {
         List<SensorEvent> sensorEvents = sensorEventRepository.findSensorEventByWhenBetweenOrderByWhen(from, before);
         return sensorEvents.stream()
                 .filter(sensorEvent -> sensorEvent.getSensor().getId() == id)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 }

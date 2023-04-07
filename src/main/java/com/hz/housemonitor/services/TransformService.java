@@ -6,14 +6,12 @@ import com.hz.housemonitor.models.hubitat.Attribute;
 import com.hz.housemonitor.models.hubitat.Device;
 import org.springframework.stereotype.Service;
 
-import java.util.stream.Collectors;
-
 @Service
 public class TransformService {
     public void mapMeasurements(SensorEvent sensorEvent, Device device) {
         sensorEvent.setMeasurementList(device.getAttributes().stream()
                 .map(this::fromAttribute)
-                .collect(Collectors.toList()));
+                .toList());
     }
 
     private Measurement fromAttribute(Attribute attribute) {

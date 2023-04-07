@@ -14,7 +14,6 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -35,7 +34,7 @@ public class HomePageController {
             model.addAttribute("availableFilters", viewService.getDistinctAttributes());
             model.addAttribute("currentDateTime", LocalDateTime.now(ZoneId.systemDefault()).truncatedTo(ChronoUnit.SECONDS));
             model.addAttribute("summary", viewService.summariseStats());
-            model.addAttribute("sensorCards", sensorCards.stream().filter(card -> card.isWeatherSensor() == false).collect(Collectors.toList()));
+            model.addAttribute("sensorCards", sensorCards.stream().filter(card -> card.isWeatherSensor() == false).toList());
             model.addAttribute("forecast", viewService.getForcastWeatherData());
             model.addAttribute("currentWeather", viewService.getCurrentWeatherSensor());
 

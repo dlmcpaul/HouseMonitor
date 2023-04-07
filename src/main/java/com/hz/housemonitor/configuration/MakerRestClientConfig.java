@@ -17,8 +17,9 @@ import java.time.Duration;
 @RequiredArgsConstructor
 @Log4j2
 public class MakerRestClientConfig {
-    public final static String ALL = "/apps/api/2/devices/all";
-    public final static String DEVICES = "/apps/api/2/devices";
+    public static final String ALL = "/apps/api/2/devices/all";
+    public static final String DEVICES = "/apps/api/2/devices";
+
     public static String DEVICE(String id) {
         return DEVICES + "/" + id;
     }

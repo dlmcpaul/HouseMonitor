@@ -18,7 +18,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +30,10 @@ public class ViewService {
     public List<DayForecast> getForcastWeatherData() {
         ForecastWeather forecast = weatherService.fetchForecast();
         if (forecast.getDaily() != null) {
-            return forecast.getDaily().stream().map(f -> mapToDayForcast(f, forecast.getTimezone_offset())).collect(Collectors.toList()).subList(0, 6);
+            return forecast.getDaily().stream()
+                    .map(f -> mapToDayForcast(f, forecast.getTimezone_offset()))
+                    .toList()
+                    .subList(0, 6);
         }
         log.error("Could not fetch Forecast {}", forecast);
         return new ArrayList<>();
@@ -39,8 +41,8 @@ public class ViewService {
 
     private DayForecast mapToDayForcast(Daily d, int offset) {
         DayForecast singleDay = new DayForecast();
-        singleDay.setMin(Double.valueOf(Math.round(d.getTemp().getMin())).intValue());
-        singleDay.setMax(Double.valueOf(Math.round(d.getTemp().getMax())).intValue());
+        singleDay.setMin(Math.toIntExact(Math.round(d.getTemp().getMin())));
+        singleDay.setMax(Math.toIntExact(Math.round(d.getTemp().getMax())));
         singleDay.setHumidity(d.getHumidity());
         singleDay.setIcon(weatherService.getWeatherIcon(d.getWeather()));
         Date date = new Date((d.getDt() + offset) * 1000);
@@ -57,7 +59,7 @@ public class ViewService {
         SensorCard sensorCard = new SensorCard();
         sensorCard.setWeatherSensor(true);
 
-        sensorCard.setId(Float.valueOf(current.getSys().getId()).longValue());
+        sensorCard.setId((long) current.getSys().getId());
         sensorCard.setTitle(current.getName());
         sensorCard.setIcon(weatherService.getWeatherIcon(current.getWeather()));
         sensorCard.getAttributes().add(new SensorCardAttributeLine("temperature", String.valueOf(current.getMain().getTemp()), "C"));
@@ -97,7 +99,7 @@ public class ViewService {
         return sensorEvents.stream()
                 .filter(sensorEvent -> sensorEvent.getMeasurementList().size() > 0)
                 .map(s -> new GraphData(s.getWhen(), getSingleMeasure(s.getMeasurementList(), type).orElseGet(Measurement::new)))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<GraphData> getTodaysMeasurements(long id, String type) {
@@ -105,7 +107,7 @@ public class ViewService {
         return sensorEvents.stream()
                 .filter(sensorEvent -> sensorEvent.getMeasurementList().size() > 0)
                 .map(s -> new GraphData(s.getWhen(), getSingleMeasure(s.getMeasurementList(), type).orElseGet(Measurement::new)))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public SummaryStatistics summariseStats() {
@@ -143,7 +145,7 @@ public class ViewService {
                     .map(s -> this.createSensorCard(s.getId()))
                     .filter(Objects::nonNull)
                     .sorted(Comparator.comparing(SensorCard::getTitle))
-                    .collect(Collectors.toList());
+                    .toList();
         } finally {
             log.info("generateSensorCards completed at {}", this::now);
         }
@@ -183,7 +185,7 @@ public class ViewService {
                     .sorted(Comparator.comparing(Measurement::getType))
                     .filter(this::clean)
                     .map(measurement -> new SensorCardAttributeLine(measurement.getType(), measurement.getValue(), measurement.getUnit()))
-                    .collect(Collectors.toList());
+                    .toList();
 
             return createSensorCard(latest.get().getSensor(), latest.get().getMeasurementList(), attributes);
         }

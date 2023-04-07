@@ -16,7 +16,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
@@ -48,7 +47,7 @@ public class SensorSourceService {
                 return new Devices(requireNonNull(devices.getBody()).stream()
                         .map(this::fetchDevice)
                         .filter(device -> device.getAttributes() != null && device.getAttributes().isEmpty() == false)
-                        .collect(Collectors.toList()));
+                        .toList());
             }
         } catch (UnknownContentTypeException e) {
             log.error("Error fetching device id's {}", e.getMessage());

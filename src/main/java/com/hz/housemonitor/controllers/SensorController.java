@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,7 +29,7 @@ public class SensorController {
             model.addAttribute("releaseVersion", release.getVersion());
             model.addAttribute("availableFilters", viewService.getDistinctAttributes());
             model.addAttribute("selectedFilter", filter);
-            model.addAttribute("sensorCards", sensorCards.stream().filter(card -> card.isWeatherSensor() == false).collect(Collectors.toList()));
+            model.addAttribute("sensorCards", sensorCards.stream().filter(card -> card.isWeatherSensor() == false).toList());
         } catch (Exception e) {
             log.error("Sensors Page Exception {} {}", e.getMessage(), e);
         }

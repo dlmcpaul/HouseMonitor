@@ -37,9 +37,8 @@ public class SensorCardAttributeLine {
             return "fa-tachometer-alt";
         } else if (text.equalsIgnoreCase("weather")) {
             return "fa-cloud-sun-rain";
-        } else {
-            return "fa-question-circle";
         }
+        return "fa-question-circle";
     }
 
     private int scaleToPercentage(int amount, String unit) {

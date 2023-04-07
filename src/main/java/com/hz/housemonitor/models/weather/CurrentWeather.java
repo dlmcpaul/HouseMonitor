@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CurrentWeather {
     private Coordinates coord;
-    private List<Weather> weather = new ArrayList<Weather> ();
+    private List<Weather> weather = new ArrayList<> ();
     private String base;
     private Main main;
     private float visibility;

@@ -17,10 +17,9 @@ import java.time.Duration;
 @RequiredArgsConstructor
 @Log4j2
 public class OpenWeatherRestClientConfig {
-    public final static String CURRENT = "/data/2.5/weather";
-    public final static String ONECALL = "/data/2.5/onecall";
-    public final static String WEATHERICON = "/img/wn/";
-    //?q=London,uk&APPID=";
+    public static final String CURRENT = "/data/2.5/weather";
+    public static final String ONECALL = "/data/2.5/onecall";
+    public static final String WEATHERICON = "/img/wn/";
 
     private final PropertiesConfig config;
 

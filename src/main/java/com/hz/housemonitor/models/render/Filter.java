@@ -2,12 +2,14 @@ package com.hz.housemonitor.models.render;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Filter implements Comparable {
+@EqualsAndHashCode
+public class Filter implements Comparable<Filter> {
 	private String name;
 	private String icon;
 
@@ -41,13 +43,10 @@ public class Filter implements Comparable {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		return ((Filter) obj).getName().equals(getName());
-	}
-
-	@Override
-	public int compareTo(Object o) {
-		Filter e = (Filter) o;
-		return getName().compareTo(e.getName());
+	public int compareTo(Filter o) {
+		if (o == null) {
+			return -1;
+		}
+		return this.name.compareTo(o.getName());
 	}
 }

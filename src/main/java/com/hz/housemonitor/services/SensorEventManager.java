@@ -17,7 +17,6 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +38,7 @@ public class SensorEventManager {
             List<SensorEvent> sensorEvents = devices.getDevicesList().stream()
                     .peek(this::storeSensor)
                     .map(device -> storeSensorEvent(sensorRepository.findById(Long.valueOf(device.getId())), now))
-                    .collect(Collectors.toList());
+                    .toList();
             sensorEvents.stream().forEach(sensorEvent -> transformService.mapMeasurements(sensorEvent, findMatchingDevice(devices, sensorEvent.getSensor().getId())));
             sensorEventRepository.saveAll(sensorEvents);
             weatherService.cacheClean();
