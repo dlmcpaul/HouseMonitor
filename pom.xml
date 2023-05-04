@@ -19,7 +19,7 @@
         <highcharts.version>10.2.0</highcharts.version>
         <bulma.version>0.9.4</bulma.version>
         <font-awsome.version>5.15.4</font-awsome.version>
-        <htmx.version>1.8.6</htmx.version>
+        <htmx.version>1.9.0</htmx.version>
         <snakeyaml.version>1.32</snakeyaml.version>
         <build.number>development</build.number>
         <build.source>SNAPSHOT</build.source>
