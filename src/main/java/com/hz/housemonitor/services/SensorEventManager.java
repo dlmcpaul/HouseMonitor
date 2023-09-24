@@ -36,8 +36,8 @@ public class SensorEventManager {
         try {
             Devices devices = sensorSourceService.fetchData();
             List<SensorEvent> sensorEvents = devices.getDevicesList().stream()
-                    .peek(this::storeSensor)
-                    .map(device -> storeSensorEvent(sensorRepository.findById(Long.valueOf(device.getId())), now))
+                    .map(device -> storeSensor(device))
+                    .map(device -> makeSensorEvent(sensorRepository.findById(Long.valueOf(device.getId())), now))
                     .toList();
             sensorEvents.stream().forEach(sensorEvent -> transformService.mapMeasurements(sensorEvent, findMatchingDevice(devices, sensorEvent.getSensor().getId())));
             sensorEventRepository.saveAll(sensorEvents);
@@ -55,15 +55,15 @@ public class SensorEventManager {
         return result.orElseThrow();
     }
 
-    private SensorEvent storeSensorEvent(Optional<Sensor> sensor, LocalDateTime now) {
+    private SensorEvent makeSensorEvent(Optional<Sensor> sensor, LocalDateTime now) {
         SensorEvent sensorEvent = new SensorEvent();
         sensorEvent.setSensor(sensor.orElse(null));
         sensorEvent.setWhen(now);
-        sensorEventRepository.save(sensorEvent);
+//        sensorEventRepository.save(sensorEvent);
         return sensorEvent;
     }
 
-    private void storeSensor(Device device) {
+    private Device storeSensor(Device device) {
         Sensor sensor = new Sensor();
         sensor.setId(Long.valueOf(device.getId()));
         sensor.setLabel(device.getLabel());
@@ -75,5 +75,6 @@ public class SensorEventManager {
             sensor.setType(device.getType());
         }
         sensorRepository.save(sensor);
+        return device;
     }
 }

@@ -52,7 +52,7 @@ public class WeatherService {
                             null,
                             new ParameterizedTypeReference<>() {}
                     );
-            if (response.getStatusCodeValue() == 200) {
+            if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
         } catch (UnknownContentTypeException e) {
@@ -83,7 +83,7 @@ public class WeatherService {
                             null,
                             new ParameterizedTypeReference<>() {}
                     );
-            if (response.getStatusCodeValue() == 200) {
+            if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
         } catch (UnknownContentTypeException e) {

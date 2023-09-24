@@ -43,7 +43,7 @@ public class SensorSourceService {
                             null,
                             new ParameterizedTypeReference<List<Device>>() {}
                             );
-            if (devices.getStatusCodeValue() == 200) {
+            if (devices.getStatusCode().is2xxSuccessful()) {
                 return new Devices(requireNonNull(devices.getBody()).stream()
                         .map(this::fetchDevice)
                         .filter(device -> device.getAttributes() != null && device.getAttributes().isEmpty() == false)
@@ -68,7 +68,7 @@ public class SensorSourceService {
                     null,
                     new ParameterizedTypeReference<>() {}
             );
-            if (responseEntity.getStatusCodeValue() == 200) {
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
                 return responseEntity.getBody();
             }
         } catch (UnknownContentTypeException e) {

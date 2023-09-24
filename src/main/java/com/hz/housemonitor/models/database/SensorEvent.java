@@ -1,12 +1,12 @@
 package com.hz.housemonitor.models.database;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -23,6 +23,7 @@ public class SensorEvent {
     @SequenceGenerator(name = "sensor_event_generator", initialValue = 900000)
     @Column(name="sensor_event_id")
     private Long id;
+    @Column(name="when")
     private LocalDateTime when;
 
     @OneToOne(fetch = FetchType.LAZY)

@@ -2,8 +2,8 @@ package com.hz.housemonitor.configuration;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,7 +37,6 @@ public class OpenWeatherRestClientConfig {
         return builder
                 .rootUri(config.getOpenWeatherAPI().getUrl())
                 .setConnectTimeout(Duration.ofSeconds(5))
-                .setReadTimeout(Duration.ofSeconds(30))
                 .requestFactory(() -> new BufferingClientHttpRequestFactory(factory))
                 .build();
 

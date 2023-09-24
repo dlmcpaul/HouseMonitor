@@ -26,7 +26,7 @@ public interface MeasurementRepository extends CrudRepository<Measurement, Long>
             and e.when >= ?2
             and m.type = 'temperature'
             and m.sensor_event_id = e.sensor_event_id
-            order by m.value asc;
+            order by m.value;
             """, nativeQuery = true)
     TemperatureStat getMinTemperatureFor(Long id, LocalDateTime start);
 

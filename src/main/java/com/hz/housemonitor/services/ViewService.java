@@ -64,7 +64,7 @@ public class ViewService {
         sensorCard.setIcon(weatherService.getWeatherIcon(current.getWeather()));
         sensorCard.getAttributes().add(new SensorCardAttributeLine("temperature", String.valueOf(current.getMain().getTemp()), "C"));
 
-        if (forecast.getDaily() != null && forecast.getDaily().size() > 0) {
+        if (forecast.getDaily() != null && forecast.getDaily().isEmpty() == false) {
             DayForecast today = mapToDayForcast(forecast.getDaily().get(0), forecast.getTimezone_offset());
             sensorCard.getAttributes().add(new SensorCardAttributeLine("low", String.valueOf(today.getMin()), "C"));
             sensorCard.getAttributes().add(new SensorCardAttributeLine("high", String.valueOf(today.getMax()), "C"));
@@ -97,7 +97,7 @@ public class ViewService {
     public List<GraphData> getLast24HrsMeasurements(long id, String type) {
         List<SensorEvent> sensorEvents = localDBService.getEventsForPeriod(id, LocalDateTime.now().minusDays(1), LocalDateTime.now());
         return sensorEvents.stream()
-                .filter(sensorEvent -> sensorEvent.getMeasurementList().size() > 0)
+                .filter(sensorEvent -> sensorEvent.getMeasurementList().isEmpty() == false)
                 .map(s -> new GraphData(s.getWhen(), getSingleMeasure(s.getMeasurementList(), type).orElseGet(Measurement::new)))
                 .toList();
     }
@@ -105,7 +105,7 @@ public class ViewService {
     public List<GraphData> getTodaysMeasurements(long id, String type) {
         List<SensorEvent> sensorEvents = localDBService.getEventsForToday(id);
         return sensorEvents.stream()
-                .filter(sensorEvent -> sensorEvent.getMeasurementList().size() > 0)
+                .filter(sensorEvent -> sensorEvent.getMeasurementList().isEmpty() == false)
                 .map(s -> new GraphData(s.getWhen(), getSingleMeasure(s.getMeasurementList(), type).orElseGet(Measurement::new)))
                 .toList();
     }
