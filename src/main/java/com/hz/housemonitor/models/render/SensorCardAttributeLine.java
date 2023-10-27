@@ -37,6 +37,14 @@ public class SensorCardAttributeLine {
             return "fa-tachometer-alt";
         } else if (text.equalsIgnoreCase("weather")) {
             return "fa-cloud-sun-rain";
+        } else if (text.equalsIgnoreCase("carbondioxide")) {
+            return "fa-burn";
+        } else if (text.equalsIgnoreCase("formaldehyde")) {
+            return "fa-skull-crossbones";
+        } else if (text.equalsIgnoreCase("voc")) {
+            return "fa-allergies";
+        } else if (text.equalsIgnoreCase("pm25")) {
+            return "fa-lungs";
         }
         return "fa-question-circle";
     }
@@ -65,7 +73,7 @@ public class SensorCardAttributeLine {
     }
 
     private String mapValue(String value, String unit) {
-        if (value == null) {
+        if (value == null || value.isEmpty()) {
             return "Not Reported";
         }
 
@@ -76,9 +84,11 @@ public class SensorCardAttributeLine {
         } else if (unit.equalsIgnoreCase("hectopascal")) {
             return value + " hPa";
         } else if (unit.equalsIgnoreCase("celsius")) {
-            return value + " " + "\u00B0" + "C";
+            return value + " °C";
         } else if (unit.equalsIgnoreCase("fahrenheit")) {
-            return value + " " + "\u00B0" + "F";
+            return value + " °F";
+        } else if (unit.equalsIgnoreCase("voc")) {
+            return value + " hPa";
         }
         return value;
     }

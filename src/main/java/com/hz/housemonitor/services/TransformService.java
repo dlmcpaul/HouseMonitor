@@ -30,6 +30,14 @@ public class TransformService {
             measurement.setUnit("Percent");
         } else if (attribute.getName().equalsIgnoreCase("pressure")) {
             measurement.setUnit("Hectopascal");
+        } else if (attribute.getName().equalsIgnoreCase("voc")) {
+            measurement.setUnit("ppm");
+        } else if (attribute.getName().equalsIgnoreCase("carbondioxide")) {
+            measurement.setUnit("ppm");
+        } else if (attribute.getName().equalsIgnoreCase("pm25")) {
+            measurement.setUnit("ug/m3");
+        } else if (attribute.getName().equalsIgnoreCase("formaldehyde")) {
+            measurement.setUnit("ug/m3");
         } else {
             measurement.setUnit("");
         }

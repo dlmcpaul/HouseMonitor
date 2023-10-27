@@ -21,8 +21,7 @@ import java.util.Objects;
 @NoArgsConstructor
 public class Measurement {
     @Id
-    @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "measurement_generator")
-    @SequenceGenerator(name = "measurement_generator", initialValue = 900000)
+    @GeneratedValue(strategy= GenerationType.SEQUENCE)
     @Column(name="measurement_id")
     private Long id;
     private String unit;

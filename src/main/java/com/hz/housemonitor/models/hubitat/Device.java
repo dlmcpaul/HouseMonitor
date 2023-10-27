@@ -14,6 +14,7 @@ public class Device {
     private String label;
     private String type;
     private String id;
+    private List<Capability> capabilities;
     private List<Attribute> attributes;
 
     @Override

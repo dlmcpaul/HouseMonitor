@@ -36,7 +36,7 @@ public class SensorEventManager {
         try {
             Devices devices = sensorSourceService.fetchData();
             List<SensorEvent> sensorEvents = devices.getDevicesList().stream()
-                    .map(device -> storeSensor(device))
+                    .map(this::storeSensor)
                     .map(device -> makeSensorEvent(sensorRepository.findById(Long.valueOf(device.getId())), now))
                     .toList();
             sensorEvents.stream().forEach(sensorEvent -> transformService.mapMeasurements(sensorEvent, findMatchingDevice(devices, sensorEvent.getSensor().getId())));

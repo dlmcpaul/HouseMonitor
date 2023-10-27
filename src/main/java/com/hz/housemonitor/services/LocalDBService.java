@@ -55,12 +55,18 @@ public class LocalDBService {
         return sensorEventRepository.findSensorEventByWhenBetweenOrderByWhen(date.atStartOfDay(), date.plusDays(1).atStartOfDay());
     }
 
-    public List<SensorEvent> getEventsBetween(LocalDate from, LocalDate before) {
-        return sensorEventRepository.findSensorEventByWhenBetweenOrderByWhen(from.atStartOfDay(), before.plusDays(1).atStartOfDay());
+    public List<SensorEvent> getEventsBetween(LocalDate after, LocalDate before) {
+        return sensorEventRepository.findSensorEventByWhenBetweenOrderByWhen(after.atStartOfDay(), before.plusDays(1).atStartOfDay());
     }
 
     public List<SensorEvent> getEventsForToday() {
         return getEventsFor(LocalDate.now(ZoneId.systemDefault()));
+    }
+
+    public List<SensorEvent> getEventsBetweenDates(long id, LocalDate after, LocalDate before) {
+        return getEventsBetween(after, before).stream()
+                .filter(sensorEvent -> sensorEvent.getSensor().getId() == id)
+                .toList();
     }
 
     public List<SensorEvent> getEventsForToday(long id) {
@@ -69,7 +75,7 @@ public class LocalDBService {
                 .toList();
     }
 
-    public List<SensorEvent> getEventsForPeriod(long id, LocalDateTime from, LocalDateTime before) {
+    public List<SensorEvent> getEventsBetweenTimePeriods(long id, LocalDateTime from, LocalDateTime before) {
         List<SensorEvent> sensorEvents = sensorEventRepository.findSensorEventByWhenBetweenOrderByWhen(from, before);
         return sensorEvents.stream()
                 .filter(sensorEvent -> sensorEvent.getSensor().getId() == id)

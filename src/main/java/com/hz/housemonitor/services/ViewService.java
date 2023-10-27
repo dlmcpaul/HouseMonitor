@@ -13,6 +13,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -94,12 +95,27 @@ public class ViewService {
         return new ArrayList<>();
     }
 
-    public List<GraphData> getLast24HrsMeasurements(long id, String type) {
-        List<SensorEvent> sensorEvents = localDBService.getEventsForPeriod(id, LocalDateTime.now().minusDays(1), LocalDateTime.now());
+    public List<GraphData> getMeasurementsFor(long id, String type, LocalDate fromDate, LocalDate toDate) {
+
+        List<SensorEvent> sensorEvents;
+
+        if (toDate.isEqual(LocalDate.now())) {
+            if (fromDate.isEqual(LocalDate.now())) {
+                sensorEvents = localDBService.getEventsForToday(id);
+            } else {
+                sensorEvents = localDBService.getEventsBetweenTimePeriods(id, fromDate.atStartOfDay(), LocalDateTime.now());
+            }
+        } else {
+            sensorEvents = localDBService.getEventsBetweenDates(id, fromDate, toDate);
+        }
         return sensorEvents.stream()
                 .filter(sensorEvent -> sensorEvent.getMeasurementList().isEmpty() == false)
                 .map(s -> new GraphData(s.getWhen(), getSingleMeasure(s.getMeasurementList(), type).orElseGet(Measurement::new)))
                 .toList();
+    }
+
+    public List<GraphData> getLast24HrsMeasurements(long id, String type) {
+        return getMeasurementsFor(id, type, LocalDate.now(), LocalDate.now());
     }
 
     public List<GraphData> getTodaysMeasurements(long id, String type) {
@@ -152,19 +168,29 @@ public class ViewService {
     }
 
     @Cacheable("attributes")
+    public List<Filter> getDistinctAttributes(long sensorId) {
+        log.info("getDistinctAttributes({}) started at {}", sensorId, LocalDateTime.now());
+        try {
+            List<Filter> result = new ArrayList<>();
+            List<SensorEvent> events = localDBService.getEventsForToday();
+            events.stream()
+                    .filter(sensorEvent -> sensorEvent.getSensor().getId() == sensorId)
+                    .findFirst()
+                    .ifPresent(sensorEvent -> result.addAll(sensorEvent.getMeasurementList().stream()
+                            .map(measurement -> new Filter(measurement.getType().substring(0, 1).toUpperCase() + measurement.getType().substring(1))).sorted().toList()));
+            return result;
+        } finally {
+            log.info("getDistinctAttributes({}) completed at {}", sensorId, LocalDateTime.now());
+        }
+    }
+
     public List<Filter> getDistinctAttributes() {
         log.info("getDistinctAttributes started at {}", this::now);
         try {
-            List<SensorEvent> events = localDBService.getEventsForToday();
-            Optional<SensorEvent> anyEvent = events.stream().findFirst();
-
-            ArrayList<Filter> result = new ArrayList<>();
-
-            anyEvent.ifPresent(sensorEvent -> result.addAll(sensorEvent.getMeasurementList()
-                    .stream()
-                    .map(measurement -> new Filter(measurement.getType().substring(0, 1).toUpperCase() + measurement.getType().substring(1)))
-                    .sorted()
-                    .toList()));
+            List<Filter> result = new ArrayList<>();
+            result.add(new Filter("Humidity"));
+            result.add(new Filter("Pressure"));
+            result.add(new Filter("Temperature"));
             return result;
         } finally {
             log.info("getDistinctAttributes completed at {}", this::now);
@@ -235,6 +261,11 @@ public class ViewService {
                 || measurement.getType().equalsIgnoreCase("voltage")
                 || measurement.getType().equalsIgnoreCase("temperature")
                 || measurement.getType().equalsIgnoreCase("pressure")
+                || measurement.getType().equalsIgnoreCase("voc")
+                || measurement.getType().equalsIgnoreCase("pm25")
+                || measurement.getType().equalsIgnoreCase("formaldehyde")
+                || measurement.getType().equalsIgnoreCase("carbondioxide")
+                || measurement.getType().equalsIgnoreCase("airqualityindex")
                 || measurement.getType().equalsIgnoreCase("winddirection")
                 || measurement.getType().equalsIgnoreCase("windspeed")
                 || measurement.getType().equalsIgnoreCase("weather");

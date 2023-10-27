@@ -15,18 +15,18 @@ import java.util.Objects;
 @Getter
 @Setter
 @Table(indexes = {  @Index(name = "idx_Sensor_Event_A", columnList = "sensor_id, when"),
-                    @Index(name = "idx_Sensor_Event_B", columnList = "sensor_event_id, when")})
+                    @Index(name = "idx_Sensor_Event_B", columnList = "sensor_event_id, when"),
+                    @Index(name = "idx_Sensor_Event_C", columnList = "sensor_id")})
 @RequiredArgsConstructor
 public class SensorEvent {
     @Id
-    @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "sensor_event_generator")
-    @SequenceGenerator(name = "sensor_event_generator", initialValue = 900000)
+    @GeneratedValue(strategy= GenerationType.SEQUENCE)
     @Column(name="sensor_event_id")
     private Long id;
-    @Column(name="when")
+    @Column(name="WHEN")
     private LocalDateTime when;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="sensor_id")
     private Sensor sensor;
 

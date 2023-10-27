@@ -37,6 +37,9 @@ public class SensorCard {
     }
 
     public boolean isBatteryLow() {
+        if (getAttributeValue("battery").equalsIgnoreCase("not reported")) {
+            return false;
+        }
         try {
             return new DecimalFormat("##0.0 %").parse(getAttributeValue("battery")).floatValue() <= 0.3f;
         } catch (ParseException e) {

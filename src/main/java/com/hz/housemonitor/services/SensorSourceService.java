@@ -23,16 +23,18 @@ import static java.util.Objects.requireNonNull;
 @RequiredArgsConstructor
 @Log4j2
 public class SensorSourceService {
+    private static final String ACCESS_TOKEN = "access_token";
+
     private final RestTemplate makerRestTemplate;
     private final PropertiesConfig config;
 
     public Devices fetchData() {
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromPath(MakerRestClientConfig.DEVICES)
-                .queryParam("access_token", config.getMakerToken());
+                .queryParam(ACCESS_TOKEN, config.getMakerToken());
         UriComponentsBuilder redacted = UriComponentsBuilder
                 .fromPath(MakerRestClientConfig.DEVICES)
-                .queryParam("access_token", "hidden");
+                .queryParam(ACCESS_TOKEN, "hidden");
 
         log.info("fetching all device id's from endpoint: {}{}", config.getHubitatMakerAPI().getUrl(), redacted.toUriString());
         try {
@@ -58,7 +60,7 @@ public class SensorSourceService {
     private Device fetchDevice(Device device) {
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromPath(MakerRestClientConfig.DEVICE(device.getId()))
-                .queryParam("access_token", config.getMakerToken());
+                .queryParam(ACCESS_TOKEN, config.getMakerToken());
 
         log.info("Fetching {} using {}", device.getId(), builder.toUriString());
         try {
