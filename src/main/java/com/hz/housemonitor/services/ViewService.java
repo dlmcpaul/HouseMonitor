@@ -226,7 +226,7 @@ public class ViewService {
     }
 
     private String generateRow(List<Measurement> measurements) {
-        return measurements.stream().sorted(Comparator.comparing(Measurement::getType)).map(m -> m.getValue()).collect(Collectors.joining(","));
+        return measurements.stream().sorted(Comparator.comparing(Measurement::getType)).map(Measurement::getValue).collect(Collectors.joining(","));
     }
 
     public ByteArrayInputStream generateCSV(long sensorId) {
@@ -235,7 +235,7 @@ public class ViewService {
 
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             out.writeBytes("when,".getBytes(StandardCharsets.UTF_8));
-            out.writeBytes(firstSensorEvent.getMeasurementList().stream().sorted(Comparator.comparing(Measurement::getType)).map(m -> m.getType()).collect(Collectors.joining(",")).getBytes(StandardCharsets.UTF_8));
+            out.writeBytes(firstSensorEvent.getMeasurementList().stream().sorted(Comparator.comparing(Measurement::getType)).map(Measurement::getType).collect(Collectors.joining(",")).getBytes(StandardCharsets.UTF_8));
             out.write(10);
             allEvents.stream().forEach(sensorEvent -> {
                 out.writeBytes(sensorEvent.getWhen().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).concat(",").getBytes(StandardCharsets.UTF_8));
