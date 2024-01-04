@@ -59,6 +59,10 @@ public class LocalDBService {
         return sensorEventRepository.findSensorEventByWhenBetweenOrderByWhen(after.atStartOfDay(), before.plusDays(1).atStartOfDay());
     }
 
+    public SensorEvent getEarliestEvent(long id) {
+        return sensorEventRepository.findFirstSensorEventForId(id);
+    }
+
     public List<SensorEvent> getEventsForToday() {
         return getEventsFor(LocalDate.now(ZoneId.systemDefault()));
     }

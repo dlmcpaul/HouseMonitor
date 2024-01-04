@@ -21,6 +21,7 @@
                 <div class="column is-one-quarter">
                     <div class="block is-flex is-justify-content-center">
                         <a class="button is-white" th:href="@{/}">Home</a>
+                        <a class="button" th:href="@{/sensor/} + ${id} + '/export'" download>Export</a>
                     </div>
                     <div th:replace="~{fragments/Cards :: sensorCard (${sensor}, ${selectedFilter})}"></div>
                 </div>

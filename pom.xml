@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.6</version>
+        <version>3.1.7</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.hz</groupId>
@@ -19,7 +19,7 @@
         <highcharts.version>10.3.3</highcharts.version>
         <bulma.version>0.9.4</bulma.version>
         <font-awsome.version>5.15.4</font-awsome.version>
-        <htmx.version>1.9.7</htmx.version>
+        <htmx.version>1.9.9</htmx.version>
         <build.number>development</build.number>
         <build.source>SNAPSHOT</build.source>
         <revision>${build.number}-${build.source}</revision>
@@ -119,6 +119,9 @@
                         </exclude>
                     </excludes>
                     <imageName>dlmcpaul/${project.artifactId}:${project.version}</imageName>
+                    <image>
+                        <builder>paketobuildpacks/builder-jammy-base:latest</builder>
+                    </image>
                 </configuration>
                 <executions>
                     <execution>
@@ -128,10 +131,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.graalvm.buildtools</groupId>
-                <artifactId>native-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
