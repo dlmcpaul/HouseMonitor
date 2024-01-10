@@ -9,6 +9,8 @@ import com.hz.housemonitor.models.database.projection.HighLowStatistic;
 import com.hz.housemonitor.models.database.projection.TemperatureStat;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,6 +73,14 @@ public class LocalDBService {
         return getEventsBetween(after, before).stream()
                 .filter(sensorEvent -> sensorEvent.getSensor().getId() == id)
                 .toList();
+    }
+
+    public int getCountSensorEvents(long sensorId) {
+        return sensorEventRepository.countForId(sensorId);
+    }
+
+    public Slice<SensorEvent> getSensorEventsBySlice(long sensorId, Pageable pageable) {
+        return sensorEventRepository.findAllBySensorId(sensorId, pageable);
     }
 
     public List<SensorEvent> getEventsForToday(long id) {

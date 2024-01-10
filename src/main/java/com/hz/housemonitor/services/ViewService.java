@@ -13,18 +13,12 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -223,30 +217,6 @@ public class ViewService {
         }
 
         return null;
-    }
-
-    private String generateRow(List<Measurement> measurements) {
-        return measurements.stream().sorted(Comparator.comparing(Measurement::getType)).map(Measurement::getValue).collect(Collectors.joining(","));
-    }
-
-    public ByteArrayInputStream generateCSV(long sensorId) {
-        SensorEvent firstSensorEvent = localDBService.getEarliestEvent(sensorId);
-        List<SensorEvent> allEvents = localDBService.getEventsBetweenDates(sensorId, firstSensorEvent.getWhen().toLocalDate(), LocalDate.now());
-
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            out.writeBytes("when,".getBytes(StandardCharsets.UTF_8));
-            out.writeBytes(firstSensorEvent.getMeasurementList().stream().sorted(Comparator.comparing(Measurement::getType)).map(Measurement::getType).collect(Collectors.joining(",")).getBytes(StandardCharsets.UTF_8));
-            out.write(10);
-            allEvents.stream().forEach(sensorEvent -> {
-                out.writeBytes(sensorEvent.getWhen().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).concat(",").getBytes(StandardCharsets.UTF_8));
-                out.writeBytes(generateRow(sensorEvent.getMeasurementList()).getBytes(StandardCharsets.UTF_8));
-                out.write(10);
-            });
-            out.flush();
-            return new ByteArrayInputStream(out.toByteArray());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private SensorCard createSensorCard(Sensor sensor, List<Measurement> measurements, List<SensorCardAttributeLine> attributes) {

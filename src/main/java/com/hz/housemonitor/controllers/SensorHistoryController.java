@@ -1,6 +1,8 @@
 package com.hz.housemonitor.controllers;
 
 import com.hz.housemonitor.configuration.ReleaseInfoContributor;
+import com.hz.housemonitor.models.render.FileDownload;
+import com.hz.housemonitor.services.DataExportService;
 import com.hz.housemonitor.services.ViewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -11,12 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 
 @Controller
@@ -24,6 +24,7 @@ import java.util.Calendar;
 @Log4j2
 public class SensorHistoryController {
     private final ViewService viewService;
+    private final DataExportService dataExportService;
     private final ReleaseInfoContributor release;
 
     @GetMapping("/sensor/{id}")
@@ -40,25 +41,34 @@ public class SensorHistoryController {
         return "fragments/Graphs :: historyGraph (filters = ${availableFilters}, selected = ${selectedFilter}, id=${id})";
     }
 
-    @GetMapping("/sensor/{id}/export")
-    public ResponseEntity<Resource> getExportData(@PathVariable("id") long id) {
+    @PostMapping("/sensor/{id}/export")
+    public String exportData(@PathVariable("id") long id, Model model) {
 
-        log.info("getExportData started at {}", this::now);
+        FileDownload fileDownload = dataExportService.getExportResult(id);
+        fileDownload.started();
 
-        try {
-            InputStreamResource file = new InputStreamResource(viewService.generateCSV(id));
+        new Thread(() -> dataExportService.generateCSV(id, fileDownload)).start();
 
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + id + ".csv")
-                    .contentType(MediaType.parseMediaType("application/csv"))
-                    .body(file);
-        } finally {
-            log.info("getExportData completed at {}", this::now);
-        }
+        model.addAttribute("id", id);
+        model.addAttribute("file", fileDownload);
+        return "fragments/ExportComponent :: exportButton ( file = ${file} )";
     }
 
-    private LocalDateTime now() {
-        return LocalDateTime.now(ZoneId.systemDefault()).truncatedTo(ChronoUnit.SECONDS);
+    @GetMapping("/sensor/{id}/export")
+    public String pollExport(@PathVariable("id") long id, Model model) {
+
+        model.addAttribute("id", id);
+        model.addAttribute("file", dataExportService.getExportResult(id));
+        return "fragments/ExportComponent :: exportButton ( file = ${file} )";
+    }
+
+    @GetMapping("/sensor/{id}/download")
+    public ResponseEntity<Resource> getExportData(@PathVariable("id") long id) {
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + id + ".csv")
+                .contentType(MediaType.parseMediaType("application/csv"))
+                .body(dataExportService.getExportResult(id).getOutputFile());
     }
 
     private void updateCommonModelAttributes(Model model, long id, String filter, String compareTo, LocalDate fromDate, LocalDate toDate) {
@@ -72,6 +82,7 @@ public class SensorHistoryController {
             model.addAttribute("availableFilters", viewService.getDistinctAttributes(id));
             model.addAttribute("selectedFilter", filter);
             model.addAttribute("id", id);
+            model.addAttribute("file", dataExportService.getExportResult(id));
         } catch (Exception e) {
             log.error("Sensor History Page Exception {} {}", e.getMessage(), e);
         }

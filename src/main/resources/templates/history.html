@@ -12,7 +12,7 @@
 <body class="has-background-light">
 <section class="hero is-fullheight">
     <div class="hero-head has-background-info is-bold py-5 px-5" role="banner">
-        <p class="title has-text-white" th:text="'House Monitor (' + ${releaseVersion} + ')'">House Monitor</p>
+        <p class="title has-text-white" th:text="|House Monitor (${releaseVersion})|">House Monitor</p>
         <p class="subtitle has-text-white"><i class="fas fa-copyright" aria-hidden="true"></i> David McPaul 2021</p>
     </div>
     <div class="hero-body has-background-light" role="main">
@@ -21,9 +21,13 @@
                 <div class="column is-one-quarter">
                     <div class="block is-flex is-justify-content-center">
                         <a class="button is-white" th:href="@{/}">Home</a>
-                        <a class="button" th:href="@{/sensor/} + ${id} + '/export'" download>Export</a>
                     </div>
-                    <div th:replace="~{fragments/Cards :: sensorCard (${sensor}, ${selectedFilter})}"></div>
+                    <div class="block">
+                        <div th:replace="~{fragments/Cards :: sensorCard (${sensor}, ${selectedFilter})}"></div>
+                    </div>
+                    <div class="is-flex is-justify-content-center">
+                        <div th:replace="~{fragments/ExportComponent :: exportButton (${file})}"></div>
+                    </div>
                 </div>
                 <div th:replace="~{fragments/Graphs :: historyGraph (${availableFilters}, ${selectedFilter}, ${id})}" class="column"></div>
             </div>
