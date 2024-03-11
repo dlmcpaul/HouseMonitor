@@ -16,7 +16,8 @@ import java.util.Objects;
 @Setter
 @Table(indexes = {  @Index(name = "idx_Sensor_Event_A", columnList = "sensor_id, when"),
                     @Index(name = "idx_Sensor_Event_B", columnList = "sensor_event_id, when"),
-                    @Index(name = "idx_Sensor_Event_C", columnList = "sensor_id")})
+                    @Index(name = "idx_Sensor_Event_C", columnList = "sensor_id"),
+                    @Index(name = "idx_Sensor_Event_D", columnList = "when")})
 @RequiredArgsConstructor
 public class SensorEvent {
     @Id

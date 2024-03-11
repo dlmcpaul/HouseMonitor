@@ -5,11 +5,17 @@
 <div th:fragment="exportButton (file)" th:remove="tag">
     <button th:if="${file.isNew()}" class="button" th:with="link=@{|/sensor/${id}/export|}" th:attr="hx-post=${link}" hx-swap="outerHTML">Export</button>
     <div th:if="${file.isExportRunning()}" th:with="link=@{|/sensor/${id}/export|}" th:attr="hx-get=${link}" hx-trigger="every 5s" hx-swap="outerHTML">
-        <progress th:if="${file.getPercentComplete()} == 0" class="progress is-primary is-medium" max="100">0%</progress>
-        <progress th:if="${file.getPercentComplete()} > 0" class="progress is-primary is-medium" th:attr="value=${file.getPercentComplete()}" max="100">15%</progress>
+        <progress th:if="${file.getPercentComplete()} == 0" class="progress is-primary is-medium mb-1" max="100">0%</progress>
+        <progress th:if="${file.getPercentComplete()} > 0" class="progress is-primary is-medium mb-1" th:attr="value=${file.getPercentComplete()}" max="100">15%</progress>
+        <p class="has-text-centered mt-1 has-text-weight-semibold" th:text="|${file.getPercentComplete()}% completed|"></p>
     </div>
 
     <a th:if="${file.isFileReady()}" class="button" th:with="link=@{|/sensor/${id}/download|}" th:href="${link}" download>Download</a>
 </div>
+
+<div th:fragment="exportButtonInit" th:remove="tag">
+    <button class="button" th:with="link=@{|/sensor/${id}/export|}" th:attr="hx-post=${link}" hx-swap="outerHTML">Export</button>
+</div>
+
 </body>
 </html>

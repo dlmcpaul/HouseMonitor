@@ -26,7 +26,7 @@
                         <div th:replace="~{fragments/Cards :: sensorCard (${sensor}, ${selectedFilter})}"></div>
                     </div>
                     <div class="is-flex is-justify-content-center">
-                        <div th:replace="~{fragments/ExportComponent :: exportButton (${file})}"></div>
+                        <div th:replace="~{fragments/ExportComponent :: exportButtonInit}"></div>
                     </div>
                 </div>
                 <div th:replace="~{fragments/Graphs :: historyGraph (${availableFilters}, ${selectedFilter}, ${id})}" class="column"></div>

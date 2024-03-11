@@ -1,7 +1,7 @@
 package com.hz.housemonitor.models.render;
 
 import lombok.Data;
-import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.ByteArrayResource;
 
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class FileDownload {
 	private String status = "Export";
 	private LocalDate created;
-	private InputStreamResource outputFile;
+	private ByteArrayResource outputFile;
 	private int percentComplete;
 	private String failureReason = "";
 
@@ -44,7 +44,7 @@ public class FileDownload {
 	}
 
 	public void completed(ByteArrayInputStream bytes) {
-		outputFile = new InputStreamResource(bytes);
+		outputFile = new ByteArrayResource(bytes.readAllBytes());
 		this.status = "Download";
 	}
 
