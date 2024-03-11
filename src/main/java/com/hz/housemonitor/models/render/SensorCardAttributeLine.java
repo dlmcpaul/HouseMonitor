@@ -88,7 +88,13 @@ public class SensorCardAttributeLine {
         } else if (unit.equalsIgnoreCase("fahrenheit")) {
             return value + " °F";
         } else if (unit.equalsIgnoreCase("voc")) {
-            return value + " hPa";
+            return value + " ppb";
+        } else if (unit.equalsIgnoreCase("formaldehyde")) {
+            return value + " ppm";
+        } else if (unit.equalsIgnoreCase("carbonDioxide")) {
+            return value + " ppm";
+        } else if (unit.equalsIgnoreCase("pm25")) {
+            return value + " ug/m³";
         }
         return value;
     }
