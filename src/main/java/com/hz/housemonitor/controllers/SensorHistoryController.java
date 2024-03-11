@@ -1,18 +1,13 @@
 package com.hz.housemonitor.controllers;
 
 import com.hz.housemonitor.configuration.ReleaseInfoContributor;
-import com.hz.housemonitor.models.render.FileDownload;
-import com.hz.housemonitor.services.DataExportService;
 import com.hz.housemonitor.services.ViewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.core.io.Resource;
-import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
